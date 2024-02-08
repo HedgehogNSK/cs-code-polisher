@@ -1,46 +1,56 @@
 import * as vscode from 'vscode';
 
+export enum Procedure {
+    SortImorts = 1 << 0,
+    RemoveUnnececcaryImports = 1 << 1,
+}
+
 export interface IFormatOptions {
-    removeUnnecessaryUsings: boolean;
-    excludePathFromUsingsFormatter: string;
+    saveOnEdit: boolean;
+    excludePathFromChecking: string;
 }
 
 const getFormatOptions = (): IFormatOptions => {
     const cfg = vscode.workspace.getConfiguration('cscodepolisher');
 
     return {
-        removeUnnecessaryUsings: cfg.get<boolean>('removeUnnecessaryUsings', true),
-        excludePathFromUsingsFormatter: cfg.get<string>('excludePathFromUsingsFormatter', '{**/obj/**,**/Debug/**}'),
+        saveOnEdit: cfg.get<boolean>('saveOnEdit', true),
+        excludePathFromChecking: cfg.get<string>('excludePathFromChecking', '{**/obj/**,**/Debug/**}'),
     };
 };
-export async function formatAllDocuments(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
-
+export async function formatAllDocuments(this: any, editor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
+    let procedure = this as Procedure;
+    if (procedure == undefined)
+        throw 'ํProcedure is set incorrect';
     vscode.window.showInformationMessage('Do the `using` chores for whole project');
     var options = getFormatOptions();
-    let files = await vscode.workspace.findFiles('**/*.cs', options.excludePathFromUsingsFormatter);
+    let files = await vscode.workspace.findFiles('**/*.cs', options.excludePathFromChecking);
 
     let csDocs = files.map(vscode.workspace.openTextDocument);
     for (let jd = 0; jd != csDocs.length; ++jd) {
         let doc = await csDocs[jd];
-        formatUsings(doc);
+        formatUsings(doc, procedure);
     }
 }
 
-export async function formatUsingsWrapper(editor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
+export async function formatUsingsWrapper(this: any, editor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
+    let procedure = this as Procedure;
+    if (procedure == undefined)
+        throw 'ํProcedure is set incorrect';
     const document = editor.document;
 
     vscode.window.showInformationMessage(document.fileName + ' usings has been organized ');
-    formatUsings(document);
+    formatUsings(document, procedure);
 }
 
-export async function formatUsings(document: vscode.TextDocument) {
+export async function formatUsings(document: vscode.TextDocument, procedure: Procedure) {
     var options = getFormatOptions();
     let usingsaMap = getUsingLines(document);
     let usingsBlocks = getUsingsBlocks(document);
     let edit = new vscode.WorkspaceEdit();
 
     let hasUnnecessaryUsings: boolean = false;
-    if (options.removeUnnecessaryUsings) {
+    if (((procedure | Procedure.RemoveUnnececcaryImports) == procedure)) {
         let unnecessaryUsingsBlocks = getUnnecessaryUsingsRange(document);
         if (unnecessaryUsingsBlocks.some(v => v !== null && typeof v !== "undefined")) {
             hasUnnecessaryUsings = true;
@@ -50,21 +60,21 @@ export async function formatUsings(document: vscode.TextDocument) {
 
     try {
         let lines = Array.from(usingsaMap.values());
-        let isSorted = lines.every((value, index, array) =>
-            index === 0 || value.text.localeCompare(array[index - 1].text) != -1);
+        let isSorted: boolean = true;
+        if (((procedure | Procedure.SortImorts) == procedure)) {
+            isSorted = lines.every((value, index, array) =>
+                index === 0 || value.text.localeCompare(array[index - 1].text) != -1);
+            lines = lines.sort((a, b) => a.text.localeCompare(b.text));
+        }
         //If file doesn't have any unnecessary usings and all usings are sorted
         //then break the fixing process to prevent uninvolved files to be marked as dirty 
         if (!hasUnnecessaryUsings && isSorted)
             return;
-
-        lines = lines.sort((a, b) => a.text.localeCompare(b.text));
-
         //End of line
         const eol = document.eol === vscode.EndOfLine.LF ? '\n' : '\r\n';
         for (let id = usingsBlocks.length - 1; id != -1; --id) {
             let currentRange = usingsBlocks[id];
-
-            let currentLines = lines.filter(line => currentRange.contains(line.range)).sort((a, b) => a.text.localeCompare(b.text));
+            let currentLines = lines.filter(line => currentRange.contains(line.range));
             let position = currentRange.end;
             for (let j = 0; j != currentLines.length; ++j) {
                 let textLine = currentLines[j];
@@ -73,6 +83,8 @@ export async function formatUsings(document: vscode.TextDocument) {
             edit.delete(document.uri, usingsBlocks[id]);
         }
         vscode.workspace.applyEdit(edit);
+        if (options.saveOnEdit)
+            document.save();
     }
 
     catch (ex) {

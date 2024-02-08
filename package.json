@@ -7,32 +7,69 @@
         "name": "Vladislav Ivashnev",
         "email": "hedgensk@gmail.com"
     },
+    "publisher": "HedgehogNSK",
     "license": "LICENSE",
     "homepage": "https://github.com/HedgehogNSK/cs-code-polisher/blob/master/README.md",
     "repository": {
         "type": "git",
         "url": "https://github.com/HedgehogNSK/cs-code-polisher.git"
     },
-    "version": "0.0.1",
+    "version": "0.0.2",
     "engines": {
         "vscode": "^1.85.0"
     },
     "categories": [
-        "Other"
+        "Formatters"
     ],
     "activationEvents": [],
     "pricing": "Free",
     "main": "./dist/extension.js",
     "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "C# Code Polisher",
+            "properties": {
+                "cscodepolisher.saveOnEdit": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "If `true` then it will auto save changed files"
+                },
+                "cscodepolisher.excludePathFromChecking": {
+                    "type": "string",
+                    "default": "{**/obj/**,**/Debug/**}",
+                    "description": "Globe pattern that defines which files has to be excluded from check"
+                }
+            }
+        },
         "commands": [
             {
-                "command": "cscodepolisher.editCurrentDocument",
-                "title": "Fix ussings in current file",
+                "command": "cscodepolisher.organizeImports",
+                "title": "Clean up usings in current file",
                 "category": "CodePolisher"
             },
             {
-                "command": "cscodepolisher.editAllDocuments",
-                "title": "Fix ussings in workspace",
+                "command": "cscodepolisher.sortImports",
+                "title": "Sort usings in current file",
+                "category": "CodePolisher"
+            },
+            {
+                "command": "cscodepolisher.removeUnnecessaryImports",
+                "title": "Remove unnecessary usings in current file",
+                "category": "CodePolisher"
+            },
+            {
+                "command": "cscodepolisher.organizeImportsInWorkspace",
+                "title": "Clean up usings in workspace",
+                "category": "CodePolisher"
+            },
+            {
+                "command": "cscodepolisher.sortImportsInWorkspace",
+                "title": "Sort usings in workspace",
+                "category": "CodePolisher"
+            },
+            {
+                "command": "cscodepolisher.removeUnnecessaryImportsInWorkspace",
+                "title": "Remove usings in workspace",
                 "category": "CodePolisher"
             }
         ]

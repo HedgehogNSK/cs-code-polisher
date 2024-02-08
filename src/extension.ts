@@ -7,14 +7,30 @@ import * as usings from './usingsPolisher';
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 
-    let disposable1 = vscode.commands.registerTextEditorCommand(
-        "cscodepolisher.editAllDocuments", usings.formatAllDocuments);
-
-    context.subscriptions.push(disposable1); 2
-
     let disposable = vscode.commands.registerTextEditorCommand(
-        "cscodepolisher.editCurrentDocument", usings.formatUsingsWrapper);
+        "cscodepolisher.sortImports", usings.formatUsingsWrapper, usings.Procedure.SortImorts);
 
+    context.subscriptions.push(disposable);
+
+    disposable = vscode.commands.registerTextEditorCommand(
+        "cscodepolisher.removeUnnecessaryImports", usings.formatUsingsWrapper, usings.Procedure.RemoveUnnececcaryImports);
+    context.subscriptions.push(disposable);
+
+    disposable = vscode.commands.registerTextEditorCommand(
+        "cscodepolisher.organizeImports", usings.formatUsingsWrapper, usings.Procedure.SortImorts | usings.Procedure.RemoveUnnececcaryImports);
+    context.subscriptions.push(disposable);
+
+    disposable = vscode.commands.registerTextEditorCommand(
+        "cscodepolisher.sortImportsInWorkspace", usings.formatAllDocuments, usings.Procedure.SortImorts);
+
+    context.subscriptions.push(disposable);
+
+    disposable = vscode.commands.registerTextEditorCommand(
+        "cscodepolisher.removeUnnecessaryImportsInWorkspace", usings.formatAllDocuments, usings.Procedure.RemoveUnnececcaryImports);
+    context.subscriptions.push(disposable);
+
+    disposable = vscode.commands.registerTextEditorCommand(
+        "cscodepolisher.organizeImportsInWorkspace", usings.formatAllDocuments, usings.Procedure.SortImorts | usings.Procedure.RemoveUnnececcaryImports);
     context.subscriptions.push(disposable);
 }
 
