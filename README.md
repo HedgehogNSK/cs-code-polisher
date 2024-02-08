@@ -37,6 +37,7 @@ You can change them in Settings menu for certain project or for user
 
 * Split functions on 3: sort, remove and clean up (sort+remove)
 * Add option to save on edit `cscodepolisher.saveOnEdit` which is switched off by default
+* Fix workspace functions to work when editor window is empty
 
 ### 0.0.1
 

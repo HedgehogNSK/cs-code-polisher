@@ -14,11 +14,14 @@ const getFormatOptions = (): IFormatOptions => {
     const cfg = vscode.workspace.getConfiguration('cscodepolisher');
 
     return {
-        saveOnEdit: cfg.get<boolean>('saveOnEdit', true),
+        saveOnEdit: cfg.get<boolean>('saveOnEdit', false),
         excludePathFromChecking: cfg.get<string>('excludePathFromChecking', '{**/obj/**,**/Debug/**}'),
     };
 };
-export async function formatAllDocuments(this: any, editor: vscode.TextEditor, edit: vscode.TextEditorEdit) {
+
+const DoesLineHasUsing = (text: string): number => text.search(/using\s+[.\w]+;/);
+
+export async function formatAllDocuments(this: any) {
     let procedure = this as Procedure;
     if (procedure == undefined)
         throw 'ํProcedure is set incorrect';
@@ -119,7 +122,7 @@ export function getUsingLines(document: vscode.TextDocument): Array<vscode.TextL
     let array: Array<vscode.TextLine> = new Array();
     for (let id = 0; id != document.lineCount; ++id) {
         let line = document.lineAt(id);
-        let hasUsing = line.text.search(/using\s+[.\w]+;/);
+        let hasUsing = DoesLineHasUsing(line.text);
         if (!line.isEmptyOrWhitespace && hasUsing == 0) {
             array.push(line);
         }
@@ -139,7 +142,7 @@ export function getUsingsBlocks(document: vscode.TextDocument): Array<vscode.Ran
     let evenOneUsing: boolean = false;
     for (let id = 0; id != document.lineCount; ++id) {
         let line = document.lineAt(id);
-        let hasUsing = line.text.search(/using\s+[.\w]+;/);
+        let hasUsing = DoesLineHasUsing(line.text);
         if (line.isEmptyOrWhitespace || hasUsing == 0) {
             if (range != undefined)
                 range = line.range.union(range);

@@ -13,24 +13,28 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(disposable);
 
     disposable = vscode.commands.registerTextEditorCommand(
-        "cscodepolisher.removeUnnecessaryImports", usings.formatUsingsWrapper, usings.Procedure.RemoveUnnececcaryImports);
+        "cscodepolisher.removeUnnecessaryImports", usings.formatUsingsWrapper
+        , usings.Procedure.RemoveUnnececcaryImports);
     context.subscriptions.push(disposable);
 
     disposable = vscode.commands.registerTextEditorCommand(
-        "cscodepolisher.organizeImports", usings.formatUsingsWrapper, usings.Procedure.SortImorts | usings.Procedure.RemoveUnnececcaryImports);
+        "cscodepolisher.organizeImports", usings.formatUsingsWrapper
+        , usings.Procedure.SortImorts | usings.Procedure.RemoveUnnececcaryImports);
     context.subscriptions.push(disposable);
 
-    disposable = vscode.commands.registerTextEditorCommand(
-        "cscodepolisher.sortImportsInWorkspace", usings.formatAllDocuments, usings.Procedure.SortImorts);
-
+    disposable = vscode.commands.registerCommand(
+        "cscodepolisher.sortImportsInWorkspace", usings.formatAllDocuments
+        , usings.Procedure.SortImorts);
     context.subscriptions.push(disposable);
 
-    disposable = vscode.commands.registerTextEditorCommand(
-        "cscodepolisher.removeUnnecessaryImportsInWorkspace", usings.formatAllDocuments, usings.Procedure.RemoveUnnececcaryImports);
+    disposable = vscode.commands.registerCommand(
+        "cscodepolisher.removeUnnecessaryImportsInWorkspace", usings.formatAllDocuments
+        , usings.Procedure.RemoveUnnececcaryImports);
     context.subscriptions.push(disposable);
 
-    disposable = vscode.commands.registerTextEditorCommand(
-        "cscodepolisher.organizeImportsInWorkspace", usings.formatAllDocuments, usings.Procedure.SortImorts | usings.Procedure.RemoveUnnececcaryImports);
+    disposable = vscode.commands.registerCommand(
+        "cscodepolisher.organizeImportsInWorkspace", usings.formatAllDocuments
+        , usings.Procedure.SortImorts | usings.Procedure.RemoveUnnececcaryImports);
     context.subscriptions.push(disposable);
 }
 
