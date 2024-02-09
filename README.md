@@ -28,8 +28,8 @@ Because in other way analyzer will not execute diagnostics for closed files. In 
 
 This extension contributes the following settings:
 
-* `cscodepolisher.saveOnEdit`: boolean - `false` by default. If it is `true` then fies will be saved after edit.
-* `cscodepolisher.excludePathFromChecking`: GlobPattern - you can add files to exclude check for them.
+* `cscodepolisher.saveOnEdit`: boolean - `false` by default. If it is `true` then files that were changed during chores will be saved after editing.
+* `cscodepolisher.excludePathFromChecking`: [GlobPattern](https://code.visualstudio.com/docs/editor/glob-patterns) - paths that need to be excluded from the check.
 
 You can change them in Settings menu for certain project or for user
 
