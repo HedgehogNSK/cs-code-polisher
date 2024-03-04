@@ -2,6 +2,7 @@
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
 import * as usings from './usingsPolisher';
+import * as freeSpaces from './removeFreeSpaces';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -35,6 +36,14 @@ export function activate(context: vscode.ExtensionContext) {
     disposable = vscode.commands.registerCommand(
         "cscodepolisher.organizeImportsInWorkspace", usings.formatAllDocuments
         , usings.Procedure.SortImorts | usings.Procedure.RemoveUnnececcaryImports);
+    context.subscriptions.push(disposable);
+
+    disposable = vscode.commands.registerTextEditorCommand(
+        "cscodepolisher.removeFreeSpaces", freeSpaces.removeWhiteSpacesWrapper);
+    context.subscriptions.push(disposable);
+
+    disposable = vscode.commands.registerCommand(
+        "cscodepolisher.removeFreeSpacesInWorkspace", freeSpaces.removeWhiteSpacesInWorkspace);
     context.subscriptions.push(disposable);
 }
 

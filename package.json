@@ -14,7 +14,7 @@
         "type": "git",
         "url": "https://github.com/HedgehogNSK/cs-code-polisher.git"
     },
-    "version": "0.0.2",
+    "version": "0.0.3",
     "engines": {
         "vscode": "^1.85.0"
     },
@@ -70,6 +70,16 @@
             {
                 "command": "cscodepolisher.removeUnnecessaryImportsInWorkspace",
                 "title": "Remove usings in workspace",
+                "category": "CodePolisher"
+            },
+            {
+                "command": "cscodepolisher.removeFreeSpacesInWorkspace",
+                "title": "Remove unnecessary empty spaces in workspace",
+                "category": "CodePolisher"
+            },
+            {
+                "command": "cscodepolisher.removeFreeSpaces",
+                "title": "Remove unnecessary empty spaces in current file",
                 "category": "CodePolisher"
             }
         ]

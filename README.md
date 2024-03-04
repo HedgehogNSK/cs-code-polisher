@@ -1,12 +1,12 @@
-# C# Code Polisher README
+# C# Code Polisher
 
-It's an extension for **VSCode** under **Roslyn LSP** manage. The extension provides ability to sort and remove unnecessary usings in single C# lang files and in workspace.
+It's an extension for **VS Code** under **Roslyn LSP** manage. The extension provides ability to sort and remove unnecessary usings both in separate C# lang files and in the whole workspace. Also it provides ability to clean unnecessary whitespaces.
 
-**IT WON'T WORK FOR ANY OTHER LSP (FOR OMNISHARP ALSO)**.
+**IT WON'T WORK FOR OMNISHARP AND OTHER LSP**
 
 ## Features
 
-Extension allows to do the chores for C# usings via VS code command palette. Keep in a mind that removing of unnecessary usings can be executed successfully only when LSP finishes its checks. So you need to wait until LSP to light up files in workspace before using the extension. 
+Extension allows to do the chores for C# usings via VS code command palette. Keep in a mind that removing of unnecessary usings can be executed successfully only when LSP finishes its checks. So you need to wait until LSP to light up files in workspace before using the extension. Clean whitespace function can be execute instantly.
 
 1. Shift + Command + P (Mac) / Ctrl + Shift + P (Windows/Linux)
 2. Insert 'CodePolisher'
@@ -16,7 +16,7 @@ Extension allows to do the chores for C# usings via VS code command palette. Kee
 
 ## Requirements
 
-Extension works for VS Code editor (1.85.0 and higher) that uses Roslyn LSP. This extension will not work for Omnisharp LSP or any other due to differences in structure of diagnostics data that different LSPs collects. 
+Extension works for VS Code editor (1.85.0 and higher) that uses Roslyn LSP. This extension will not work for OmniSharp LSP or any other due to differences in structure of diagnostics data that different LSPs collects. 
 
 If you wish to have ability to clean unnecessary usings for closed files of a workspace, then you have to add line to `.vscode/settings.json` of the project or of a user:
 
@@ -32,6 +32,9 @@ This extension contributes the following settings:
 * `cscodepolisher.excludePathFromChecking`: [GlobPattern](https://code.visualstudio.com/docs/editor/glob-patterns) - paths that need to be excluded from the check.
 
 You can change them in Settings menu for certain project or for user
+### 0.0.3
+
+* Add function that removes unnecessary whitespace for current file and for workspace as well
 
 ### 0.0.2
 

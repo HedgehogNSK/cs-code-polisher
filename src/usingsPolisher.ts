@@ -1,23 +1,10 @@
 import * as vscode from 'vscode';
+import * as tools from './tools';
 
 export enum Procedure {
     SortImorts = 1 << 0,
     RemoveUnnececcaryImports = 1 << 1,
 }
-
-export interface IFormatOptions {
-    saveOnEdit: boolean;
-    excludePathFromChecking: string;
-}
-
-const getFormatOptions = (): IFormatOptions => {
-    const cfg = vscode.workspace.getConfiguration('cscodepolisher');
-
-    return {
-        saveOnEdit: cfg.get<boolean>('saveOnEdit', false),
-        excludePathFromChecking: cfg.get<string>('excludePathFromChecking', '{**/obj/**,**/Debug/**}'),
-    };
-};
 
 const DoesLineHasUsing = (text: string): number => text.search(/using\s+[.\w]+;/);
 
@@ -26,7 +13,7 @@ export async function formatAllDocuments(this: any) {
     if (procedure == undefined)
         throw 'ํProcedure is set incorrect';
     vscode.window.showInformationMessage('Do the `using` chores for whole project');
-    var options = getFormatOptions();
+    var options = tools.getFormatOptions();
     let files = await vscode.workspace.findFiles('**/*.cs', options.excludePathFromChecking);
 
     let csDocs = files.map(vscode.workspace.openTextDocument);
@@ -47,7 +34,7 @@ export async function formatUsingsWrapper(this: any, editor: vscode.TextEditor, 
 }
 
 export async function formatUsings(document: vscode.TextDocument, procedure: Procedure) {
-    var options = getFormatOptions();
+    var options = tools.getFormatOptions();
     let usingsaMap = getUsingLines(document);
     let usingsBlocks = getUsingsBlocks(document);
     let edit = new vscode.WorkspaceEdit();
